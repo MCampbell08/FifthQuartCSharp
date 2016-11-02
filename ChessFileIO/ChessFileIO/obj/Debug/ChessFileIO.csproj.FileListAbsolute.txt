@@ -1,0 +1,6 @@
+C:\FifthQuartCSharp\ChessFileIO\ChessFileIO\bin\Debug\ChessFileIO.exe.config
+C:\FifthQuartCSharp\ChessFileIO\ChessFileIO\bin\Debug\ChessFileIO.exe
+C:\FifthQuartCSharp\ChessFileIO\ChessFileIO\bin\Debug\ChessFileIO.pdb
+C:\FifthQuartCSharp\ChessFileIO\ChessFileIO\obj\Debug\ChessFileIO.csprojResolveAssemblyReference.cache
+C:\FifthQuartCSharp\ChessFileIO\ChessFileIO\obj\Debug\ChessFileIO.exe
+C:\FifthQuartCSharp\ChessFileIO\ChessFileIO\obj\Debug\ChessFileIO.pdb

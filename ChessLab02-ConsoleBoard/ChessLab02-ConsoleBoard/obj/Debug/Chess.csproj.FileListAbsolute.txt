@@ -1,0 +1,6 @@
+C:\FifthQuartCSharp\ChessLab02-ConsoleBoard\ChessLab02-ConsoleBoard\bin\Debug\ChessFileIO.exe.config
+C:\FifthQuartCSharp\ChessLab02-ConsoleBoard\ChessLab02-ConsoleBoard\bin\Debug\ChessFileIO.exe
+C:\FifthQuartCSharp\ChessLab02-ConsoleBoard\ChessLab02-ConsoleBoard\bin\Debug\ChessFileIO.pdb
+C:\FifthQuartCSharp\ChessLab02-ConsoleBoard\ChessLab02-ConsoleBoard\obj\Debug\Chess.csprojResolveAssemblyReference.cache
+C:\FifthQuartCSharp\ChessLab02-ConsoleBoard\ChessLab02-ConsoleBoard\obj\Debug\ChessFileIO.exe
+C:\FifthQuartCSharp\ChessLab02-ConsoleBoard\ChessLab02-ConsoleBoard\obj\Debug\ChessFileIO.pdb

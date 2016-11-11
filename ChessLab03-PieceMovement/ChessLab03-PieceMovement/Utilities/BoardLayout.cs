@@ -13,7 +13,6 @@ namespace ChessFileIO.Utilities
         protected string[,] chessBoard = new string[8, 8];
         private BasicUtilities utilities = new BasicUtilities();
         private PlayerPiece playerPiece = new PlayerPiece();
-        private GameLogic gameLogic = new GameLogic();
         private const int charNumConverter = 48;
 
         public void AddPlacement(string piece, string color, string rank, string file)
@@ -41,7 +40,7 @@ namespace ChessFileIO.Utilities
 
             if (chessBoard[parsedOldFile - 1, parsedOldRank - 1] != BoardPiece(ChessTypes.Empty))
             {
-                if (gameLogic.MovePiece(piece, action, parsedOldFile, parsedOldRank, parsedNewFile, parsedNewRank))
+                if (MovePiece(piece, action, parsedOldFile, parsedOldRank, parsedNewFile, parsedNewRank))
                 {
                     logMove = true;
                 }

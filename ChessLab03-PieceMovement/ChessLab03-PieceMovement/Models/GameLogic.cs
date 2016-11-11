@@ -21,10 +21,29 @@ namespace ChessFileIO.Models
         {
             ArrayList possibleLocations = new ArrayList();
             bool validMove = false;
+            bool isAttack = AttackOrMove(action);
 
+            if (!IsEmpty(parsedOldFile, parsedOldRank))
+            {
+                pieceLogic.AppropriatePiece(piece, parsedOldFile, parsedOldRank);
+                validMove = true;
+            }
+            else
+            {
+                if (IsEmpty(parsedNewFile, parsedOldRank) && isAttack || !IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
+                {
+                    validMove = false;
+                }
+                else if (IsEmpty(parsedNewFile, parsedOldRank) && !isAttack)
+                { 
 
-            pieceLogic.AppropriatePiece(piece);
-
+                    validMove = true;
+                }
+                else if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
+                {
+                    validMove = true;
+                }
+            }
             return validMove;
         }
 

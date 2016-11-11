@@ -4,65 +4,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChessFileIO.Enums;
+using System.Collections;
 
 namespace ChessFileIO.Models
 {
     public class PieceLogic : GameLogic
     {
-        public bool AppropriatePiece(string piece)
+        private ArrayList pieceLocations = new ArrayList();
+        public ArrayList AppropriatePiece(string piece, int file, int rank)
         {
-            bool validMove = false;
+            ArrayList locations = new ArrayList();
 
             if (piece == ChessTypes.King.ToString().Substring(0, 1))
             {
-                King();
+                locations = King(file, rank);
             }
             else if (piece == ChessTypes.Queen.ToString().Substring(0, 1))
             {
-                Queen();
+                locations = Queen(file, rank);
             }
             else if (piece == ChessTypes.Knight.ToString().Substring(1, 1))
             {
-                Knight();
+                locations = Knight(file, rank);
             }
             else if (piece == ChessTypes.Bishop.ToString().Substring(0, 1))
             {
-                Bishop();
+                locations = Bishop(file, rank);
             }
             else if (piece == ChessTypes.Pawn.ToString().Substring(0, 1))
             {
-                Pawn();
+                locations = Pawn(file, rank);
             }
             else if (piece == ChessTypes.Rook.ToString().Substring(0, 1))
             {
-                Rook();
+                locations = Rook(file, rank);
             }
-            return validMove;
+            return locations;
         }
 
-        private bool King()
+        private ArrayList King(int file, int rank)
         {
-            return false;
+            return pieceLocations;
         }
-        private bool Queen()
+        private ArrayList Queen(int file, int rank)
         {
-            return false;
+            return pieceLocations;
         }
-        private bool Bishop()
+        private ArrayList Bishop(int file, int rank)
         {
-            return false;
+            return pieceLocations;
         }
-        private bool Knight()
+        private ArrayList Knight(int file, int rank)
         {
-            return false;
+            return pieceLocations;
         }
-        private bool Rook()
+        private ArrayList Rook(int file, int rank)
         {
-            return false;
+            return pieceLocations;
         }
-        private bool Pawn()
+        private ArrayList Pawn(int file, int rank)
         {
-            return false;
+            return pieceLocations;
         }
     }
 }

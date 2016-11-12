@@ -32,20 +32,20 @@ namespace ChessFileIO
                 parse.RegexChooser(line);
             }
             fileName.Close();
-            //while (line != "Exit")
-            //{
-            //    line = Console.ReadLine();
-            //    Match comment = Regex.Match(line, @"(\s+)?(\/+).*");
+            while (line != "Exit")
+            {
+                line = Console.ReadLine();
+                Match comment = Regex.Match(line, @"(\s+)?(\/+).*");
 
-            //    if (comment.Success)
-            //    {
-            //        line = line.Remove(comment.Groups[1].Index);
-            //    }
-            //    if (line != "Exit")
-            //    {
-            //        parse.RegexChooser(line);
-            //    }
-            //}
+                if (comment.Success)
+                {
+                    line = line.Remove(comment.Groups[1].Index);
+                }
+                if (line != "Exit")
+                {
+                    parse.RegexChooser(line);
+                }
+            }
         }
     }
 }

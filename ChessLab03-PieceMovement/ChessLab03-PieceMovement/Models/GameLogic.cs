@@ -16,10 +16,39 @@ namespace ChessFileIO.Models
         //Return ArrayList of Locations to check for validation.
         //-------------
         //
-        public static bool MovePiece(string piece, string action, int parsedOldFile, int parsedOldRank, int parsedNewFile, int parsedNewRank)
+        PieceLogic pieceLogic = new PieceLogic();
+        public bool MovePiece(string piece, string action, int parsedOldFile, int parsedOldRank, int parsedNewFile, int parsedNewRank)
         {
             bool validMove = false;
-            
+            bool isAttack = AttackOrMove(action);
+            int tempFile = parsedNewFile - 1;
+            int tempRank = parsedNewRank - 1;
+            string newLocation = tempFile.ToString() + tempRank.ToString();
+            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, parsedOldFile-1, parsedOldRank-1);
+
+            if (!IsEmpty(parsedOldFile, parsedOldRank))
+            {
+                validMove = true;
+                if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack || !IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
+                {
+                    return false;
+                }
+                else if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
+                {
+
+                }
+                else if (IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
+                {
+                    for (int i = 0; i < possibleLocations.Count; i++)
+                    {
+                        //if ()
+                        //{
+
+                        //}
+                    }
+                }
+            }
+
             return validMove;
         }
 

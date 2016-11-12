@@ -28,6 +28,7 @@ namespace ChessFileIO.Utilities
         }
         public bool AddMovement(string piece, string color, string oldRank, string oldFile, string newRank, string newFile, string action)
         {
+            GameLogic gameLogic = new GameLogic();
             bool logMove = false;
             char charRawOld = char.Parse(oldRank); charRawOld -= (char)charNumConverter;
             char charRawNew = char.Parse(newRank); charRawNew -= (char)charNumConverter;
@@ -40,7 +41,7 @@ namespace ChessFileIO.Utilities
 
             if (chessBoard[parsedOldFile - 1, parsedOldRank - 1] != BoardPiece(ChessTypes.Empty))
             {
-                if (MovePiece(piece, action, parsedOldFile, parsedOldRank, parsedNewFile, parsedNewRank))
+                if (gameLogic.MovePiece(piece, action, parsedOldFile, parsedOldRank, parsedNewFile, parsedNewRank))
                 {
                     logMove = true;
                 }

@@ -55,9 +55,10 @@ namespace ChessFileIO.Models
             }
             for (int i = 0; i < pieceLocations.Count; i++)
             {
-                if ()
+                if (pieceLocations.Contains(file.ToString() + rank.ToString()))
                 {
-
+                    Console.WriteLine(file.ToString() + rank.ToString());
+                    pieceLocations.Remove(file.ToString() + rank.ToString());
                 }
             }
             return pieceLocations;

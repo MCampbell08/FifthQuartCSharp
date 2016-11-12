@@ -24,27 +24,28 @@ namespace ChessFileIO.Models
             int tempFile = parsedNewFile - 1;
             int tempRank = parsedNewRank - 1;
             string newLocation = tempFile.ToString() + tempRank.ToString();
-            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, parsedOldFile-1, parsedOldRank-1);
+            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, parsedOldFile - 1, parsedOldRank - 1);
 
             if (!IsEmpty(parsedOldFile, parsedOldRank))
             {
                 validMove = true;
                 if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack || !IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
                 {
-                    return false;
+                    validMove = false;
                 }
                 else if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
                 {
-
+                    if (possibleLocations.Contains(newLocation))
+                    {
+                        validMove = true;
+                    }
+                    chessBoard
                 }
                 else if (IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
                 {
-                    for (int i = 0; i < possibleLocations.Count; i++)
+                    if (possibleLocations.Contains(newLocation))
                     {
-                        //if ()
-                        //{
-
-                        //}
+                        validMove = true;
                     }
                 }
             }

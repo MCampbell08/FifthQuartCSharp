@@ -10,7 +10,7 @@ namespace ChessFileIO.Utilities
 {
     public class BoardLayout
     {
-        protected string[,] chessBoard = new string[8, 8];
+        protected static string[,] chessBoard = new string[8, 8];
         private BasicUtilities utilities = new BasicUtilities();
         private PlayerPiece playerPiece = new PlayerPiece();
         private const int charNumConverter = 48;

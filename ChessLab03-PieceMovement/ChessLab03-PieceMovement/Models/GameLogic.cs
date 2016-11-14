@@ -29,17 +29,20 @@ namespace ChessFileIO.Models
             if (!IsEmpty(parsedOldFile, parsedOldRank))
             {
                 validMove = true;
-                if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack || !IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
+                if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
                 {
                     validMove = false;
                 }
-                else if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
+                else if (!IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
+                {
+                    validMove = false;
+                }
+                if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
                         validMove = true;
                     }
-                    chessBoard
                 }
                 else if (IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
                 {
@@ -47,6 +50,10 @@ namespace ChessFileIO.Models
                     {
                         validMove = true;
                     }
+                    string movingPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1];
+                    string emptyPiece = chessBoard[parsedNewFile - 1, parsedNewRank - 1];
+                    chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                    chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
                 }
             }
 

@@ -38,7 +38,7 @@ namespace ChessFileIO.Utilities
             int parsedOldRank = Int32.Parse(charRawOld.ToString());
             int parsedNewFile = Int32.Parse(newFile);
             int parsedNewRank = Int32.Parse(charRawNew.ToString());
-
+            
             if (chessBoard[parsedOldFile - 1, parsedOldRank - 1] != BoardPiece(ChessTypes.Empty))
             {
                 if (gameLogic.MovePiece(piece, action, parsedOldFile, parsedOldRank, parsedNewFile, parsedNewRank))
@@ -51,7 +51,6 @@ namespace ChessFileIO.Utilities
                 string incMove = String.Format("[{0,-7}]    Cannot move empty piece, Skipping.", "Error");
                 Console.WriteLine(incMove);
             }
-            Board();
             return logMove;
         }
         public void BoardInit()

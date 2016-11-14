@@ -43,7 +43,10 @@ namespace ChessFileIO
                 }
                 if (line != "Exit")
                 {
-                    parse.RegexChooser(line);
+                    if (parse.RegexChooser(line))
+                    {
+                        Board();
+                    }
                 }
             }
         }

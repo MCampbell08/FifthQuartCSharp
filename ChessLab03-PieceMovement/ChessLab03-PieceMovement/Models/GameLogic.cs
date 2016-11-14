@@ -31,10 +31,14 @@ namespace ChessFileIO.Models
                 validMove = true;
                 if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
                 {
+                    string incMove = String.Format("[{0,-7}]    Cannot attack empty space.", "Error");
+                    Console.WriteLine(incMove);
                     validMove = false;
                 }
                 else if (!IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
                 {
+                    string incMove = String.Format("[{0,-7}]    Cannot move to taken space.", "Error");
+                    Console.WriteLine(incMove);
                     validMove = false;
                 }
                 if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
@@ -43,6 +47,10 @@ namespace ChessFileIO.Models
                     {
                         validMove = true;
                     }
+                    string movingPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1];
+                    string emptyPiece = chessBoard[parsedNewFile - 1, parsedNewRank - 1];
+                    chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                    chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
                 }
                 else if (IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
                 {

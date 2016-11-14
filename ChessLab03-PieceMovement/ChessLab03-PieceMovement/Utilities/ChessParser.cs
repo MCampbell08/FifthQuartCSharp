@@ -16,6 +16,7 @@ namespace ChessFileIO
         private BoardLayout board = new BoardLayout();
         private bool initialize = true;
         private bool firstMovement = true;
+        private bool validMove = false;
 
         #region Regex Matches
         private Match placement;
@@ -25,7 +26,7 @@ namespace ChessFileIO
         private Match subCastling;
         #endregion
 
-        public void RegexChooser(string fileLine)
+        public bool RegexChooser(string fileLine)
         {
             placement = Regex.Match(fileLine, @"^\s*([RQKPNB])([ld])([a-h])([1-8])$");
             movement = Regex.Match(fileLine, @"^\s*([RQKNB])?([a-h])([1-8])([-x])([a-h])([1-8])([+#])?\s*([RQKNB])?([a-h])([1-8])([-x])([a-h])([1-8])([+#])?$");
@@ -59,6 +60,7 @@ namespace ChessFileIO
                     Console.WriteLine(failedLine);
                 }
             }
+            return validMove;
 
         }
         private void Placement(Match placement)
@@ -66,6 +68,7 @@ namespace ChessFileIO
             string finishedPlacement = String.Format("[{0,-7}]  {1} {2} was placed at {3}{4}", utilities.WhitespaceRemover(placement.Groups[0].Value), player.NameSelector(placement.Groups[1].Value), player.PieceColor(placement.Groups[2].Value, true), placement.Groups[3].Value, placement.Groups[4].Value);
             Console.WriteLine(finishedPlacement);
             board.AddPlacement(placement.Groups[1].Value, placement.Groups[2].Value, placement.Groups[3].Value, placement.Groups[4].Value);
+            validMove = true;
         }
         private void Movement(string line, Match movement)
         {
@@ -97,6 +100,11 @@ namespace ChessFileIO
             {
                 firstMovement = firstMovement ? firstMovement = false : firstMovement = true;
                 move = String.Format("[{0,-7}]  {1} moves {2} at {3}{4} to {5}{6}{7}{8}", subMove.Value, color, player.NameSelector(subMove.Groups[1].Value), subMove.Groups[2].Value, subMove.Groups[3].Value, subMove.Groups[5].Value, subMove.Groups[6].Value, player.ActionTaken(subMove.Groups[4].Value), player.ActionTaken(subMove.Groups[7].Value));
+                validMove = true;
+            }
+            else
+            {
+                validMove = false;
             }
             
             return move;

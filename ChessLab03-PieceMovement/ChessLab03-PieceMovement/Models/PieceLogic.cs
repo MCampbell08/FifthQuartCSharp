@@ -93,9 +93,15 @@ namespace ChessFileIO.Models
                         else
                         {
                             Console.WriteLine(String.Format("[{0,-7}]    Cannot hop pieces.", "Error"));
-                            for ()
+                            if (pieceLocations != null)
                             {
-
+                                foreach (string s in pieceLocations)
+                                {
+                                    if (s != null)
+                                    {
+                                        pieceLocations.Remove(s);
+                                    }
+                                }
                             }
                         }
                     }

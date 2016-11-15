@@ -24,11 +24,12 @@ namespace ChessFileIO.Models
             int tempFile = parsedNewFile - 1;
             int tempRank = parsedNewRank - 1;
             string newLocation = tempFile.ToString() + tempRank.ToString();
-            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, parsedOldFile - 1, parsedOldRank - 1);
+            string movingPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1];
+            string emptyPiece = chessBoard[parsedNewFile - 1, parsedNewRank - 1];
+            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, parsedOldFile - 1, parsedOldRank - 1, parsedNewFile - 1, parsedNewRank - 1);
 
             if (!IsEmpty(parsedOldFile, parsedOldRank))
             {
-                validMove = true;
                 if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
                 {
                     string incMove = String.Format("[{0,-7}]    Cannot attack empty space.", "Error");
@@ -45,23 +46,35 @@ namespace ChessFileIO.Models
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        validMove = true;
+                        if (char.IsUpper(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsLower(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()) 
+                            || char.IsLower(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsUpper(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()))
+                        {
+                            validMove = true;
+                            chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                            chessBoard[parsedOldFile - 1, parsedOldRank - 1] = BoardPiece(ChessTypes.Empty);
+                        }
                     }
-                    string movingPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1];
-                    string emptyPiece = chessBoard[parsedNewFile - 1, parsedNewRank - 1];
-                    chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
-                    chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
+                    else
+                    {
+                        string incMove = String.Format("[{0,-7}]    This is not a possible location to capture.", "Error");
+                        Console.WriteLine(incMove);
+                        validMove = false;
+                    }
                 }
                 else if (IsEmpty(parsedNewFile, parsedNewRank) && !isAttack)
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
                         validMove = true;
+                        chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                        chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
                     }
-                    string movingPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1];
-                    string emptyPiece = chessBoard[parsedNewFile - 1, parsedNewRank - 1];
-                    chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
-                    chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
+                    else
+                    {
+                        string incMove = String.Format("[{0,-7}]    This is not a possible location to move to.", "Error");
+                        Console.WriteLine(incMove);
+                        validMove = false;
+                    }
                 }
             }
 

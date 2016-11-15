@@ -26,7 +26,7 @@ namespace ChessFileIO
         private Match subCastling;
         #endregion
 
-        public bool RegexChooser(string fileLine)
+        public void RegexChooser(string fileLine)
         {
             placement = Regex.Match(fileLine, @"^\s*([RQKPNB])([ld])([a-h])([1-8])$");
             movement = Regex.Match(fileLine, @"^\s*([RQKNB])?([a-h])([1-8])([-x])([a-h])([1-8])([+#])?\s*([RQKNB])?([a-h])([1-8])([-x])([a-h])([1-8])([+#])?$");
@@ -60,8 +60,10 @@ namespace ChessFileIO
                     Console.WriteLine(failedLine);
                 }
             }
-            return validMove;
-
+            if (validMove)
+            {
+                board.Board();
+            }
         }
         private void Placement(Match placement)
         {

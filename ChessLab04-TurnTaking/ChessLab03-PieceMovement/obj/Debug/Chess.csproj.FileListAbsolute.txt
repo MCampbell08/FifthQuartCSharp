@@ -10,6 +10,9 @@ C:\FifthQuartCSharp\ChessLab03-PieceMovement\ChessLab03-PieceMovement\obj\Debug\
 C:\FifthQuartCSharp\ChessLab03-PieceMovement\ChessLab03-PieceMovement\bin\Debug\ChessFileIO.exe
 C:\FifthQuartCSharp\ChessLab03-PieceMovement\ChessLab03-PieceMovement\bin\Debug\ChessFileIO.pdb
 C:\FifthQuartCSharp\ChessLab03-PieceMovement\ChessLab03-PieceMovement\obj\Debug\Chess.csprojResolveAssemblyReference.cache
+<<<<<<< HEAD
 C:\FifthQuartCSharp\ChessLab04-TurnTaking\ChessLab03-PieceMovement\bin\Debug\ChessFileIO.exe.config
 C:\FifthQuartCSharp\ChessLab04-TurnTaking\ChessLab03-PieceMovement\obj\Debug\ChessFileIO.exe
 C:\FifthQuartCSharp\ChessLab04-TurnTaking\ChessLab03-PieceMovement\obj\Debug\ChessFileIO.pdb
+=======
+>>>>>>> parent of c7f3d6f... Last changes to finsih

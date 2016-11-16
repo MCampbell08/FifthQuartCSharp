@@ -41,21 +41,25 @@ namespace ChessFileIO.Models
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        if (char.IsUpper(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsLower(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()) 
-                            || char.IsLower(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsUpper(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()))
+                        allMoves.Add(" ");
+                        if ((string)allMoves[allMoves.Count - 1] == " ")
                         {
-                            if (allMoves.ToString()[allMoves.Count].ToString().First() != chessBoard[parsedOldFile - 1, parsedOldRank - 1].ToString().First())
+                            if (char.IsUpper(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsLower(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First())
+                            || char.IsLower(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsUpper(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()))
                             {
-                                validMove = true;
-                                chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
-                                chessBoard[parsedOldFile - 1, parsedOldRank - 1] = BoardPiece(ChessTypes.Empty);
-                                allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
-                            }
-                            else
-                            {
-                                string incMove = String.Format("[{0,-7}]    Invalid piece to move.", "Error");
-                                Console.WriteLine(incMove);
-                                validMove = false;
+                                if (allMoves.ToString()[allMoves.Count - 1].ToString().First() != chessBoard[parsedOldFile - 1, parsedOldRank - 1].ToString().First())
+                                {
+                                    validMove = true;
+                                    chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                                    chessBoard[parsedOldFile - 1, parsedOldRank - 1] = BoardPiece(ChessTypes.Empty);
+                                    allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
+                                }
+                                else
+                                {
+                                    string incMove = String.Format("[{0,-7}]    Invalid piece to move.", "Error");
+                                    Console.WriteLine(incMove);
+                                    validMove = false;
+                                }
                             }
                         }
                     }
@@ -71,9 +75,8 @@ namespace ChessFileIO.Models
                     if (possibleLocations.Contains(newLocation))
                     {
                         allMoves.Add(" ");
-                        if ((string)allMoves[allMoves.Count] == " ")
+                        if ((string)allMoves[allMoves.Count - 1] == " ")
                         {
-                            Console.WriteLine(allMoves[allMoves.Count].ToString().First() + "    " + chessBoard[parsedOldFile - 1, parsedOldRank - 1].ToString().First());
                             validMove = true;
                             chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
                             chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;

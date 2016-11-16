@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChessFileIO.Models;
 using ChessFileIO.Enums;
+using System.Collections;
 
 namespace ChessFileIO.Utilities
 {
@@ -13,6 +14,7 @@ namespace ChessFileIO.Utilities
         protected static string[,] chessBoard = new string[8, 8];
         private BasicUtilities utilities = new BasicUtilities();
         private PlayerPiece playerPiece = new PlayerPiece();
+        protected static ArrayList allMoves = new ArrayList();
         private const int charNumConverter = 48;
 
         public void AddPlacement(string piece, string color, string rank, string file)

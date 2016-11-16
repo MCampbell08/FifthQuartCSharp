@@ -12,11 +12,12 @@ namespace ChessFileIO.Models
     public class PieceLogic : BoardLayout
     {
         private ArrayList pieceLocations = new ArrayList(64);
-        private const int MAX_DIRECTION = 8;
-        public ArrayList AppropriatePiece(string piece, int oldFile, int oldRank, int newFile, int newRank)
+        private const int MAX_UP_DIRECTION = 8;
+        private const int MAX_DOWN_DIRECTION = 0;
+        public ArrayList AppropriatePiece(string piece, string action, int oldFile, int oldRank, int newFile, int newRank)
         {
             ArrayList locations = new ArrayList();
-
+            
             if (piece == ChessTypes.King.ToString().Substring(0, 1))
             {
                 locations = King(oldFile, oldRank);
@@ -25,9 +26,9 @@ namespace ChessFileIO.Models
             {
                 locations = Queen(oldFile, oldRank, newFile, newRank);
             }
-            else if (piece == ChessTypes.Knight.ToString().Substring(1, 1))
+            else if (piece == ChessTypes.Knight.ToString().Substring(1, 1).ToUpper())
             {
-                locations = Knight(oldFile, oldRank);
+                locations = Knight(oldFile, oldRank, newFile, newRank);
             }
             else if (piece == ChessTypes.Bishop.ToString().Substring(0, 1))
             {
@@ -35,11 +36,11 @@ namespace ChessFileIO.Models
             }
             else if (piece == "")
             {
-                locations = Pawn(oldFile, oldRank);
+                locations = Pawn(action, oldFile, oldRank);
             }
             else if (piece == ChessTypes.Rook.ToString().Substring(0, 1))
             {
-                locations = Rook(oldFile, oldRank);
+                locations = Rook(oldFile, oldRank, newFile, newRank);
             }
             return locations;
         }
@@ -67,103 +68,332 @@ namespace ChessFileIO.Models
         }
         private ArrayList Queen(int oldFile, int oldRank, int newFile, int newRank)
         {
-            pieceLocations = Rook(oldFile, oldRank);
+            pieceLocations = Rook(oldFile, oldRank, newFile, newRank);
             pieceLocations = Bishop(oldFile, oldRank, newFile, newRank);
             return pieceLocations;
         }
         private ArrayList Bishop(int oldFile, int oldRank, int newFile, int newRank)
         {
+            if (newFile > oldFile && newRank > oldRank)
+            {
+                TopRightBishop(oldFile, oldRank, newFile, newRank);
+            }
+            else if (newFile > oldFile && newRank < oldRank)
+            {
+                TopLeftBishop(oldFile, oldRank, newFile, newRank);
+            }
+            else if (newFile < oldFile && newRank < oldRank)
+            {
+                BottomLeftBishop(oldFile, oldRank, newFile, newRank);
+            }
+            else if (newFile < oldFile && newRank > oldRank)
+            {
+                BottomRightBishop(oldFile, oldRank, newFile, newRank);
+            }
+            return pieceLocations;
+        }
+        private void TopRightBishop(int oldFile, int oldRank, int newFile, int newRank)
+        {
             int tempRank = oldRank;
-            for (int tempFile = oldFile; tempFile < MAX_DIRECTION; tempFile++)
+            bool clearMoves = false;
+            for (int tempFile = oldFile; tempFile < MAX_UP_DIRECTION; tempFile++)
             {
                 if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
                 {
-                    if (chessBoard[tempFile, tempRank] == BoardPiece(ChessTypes.Empty))
+                    if (tempFile != oldFile && tempRank != oldRank && tempFile < newFile && tempRank < newRank)
                     {
-                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
-                        Console.WriteLine("Locations NorthEast: [{0}]", tempFile.ToString() + tempRank.ToString());
-                    }
-                    else
-                    {
-                        if (tempFile == newFile && tempRank == newRank)
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
                         {
-                            pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
-                            Console.WriteLine("Locations NorthEast: [{0}]", tempFile.ToString() + tempRank.ToString());
-                        }
-                        else
-                        {
-                            Console.WriteLine(String.Format("[{0,-7}]    Cannot hop pieces.", "Error"));
-                            if (pieceLocations != null)
-                            {
-                                foreach (string s in pieceLocations)
-                                {
-                                    if (s != null)
-                                    {
-                                        pieceLocations.Remove(s);
-                                    }
-                                }
-                            }
+                            clearMoves = true;
                         }
                     }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     tempRank++;
                 }
             }
-            //tempRank = oldRank;
-            //for (int tempFile = oldFile; tempFile < MAX_DIRECTION; tempFile--)
-            //{
-            //    if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
-            //    {
-            //        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
-            //        Console.WriteLine("Locations SouthWest: [{0}]", tempFile.ToString() + tempRank.ToString());
-            //        tempRank--;
-            //    }
-            //}
-            //tempRank = oldRank;
-            //for (int tempFile = oldFile; tempFile < MAX_DIRECTION; tempFile++)
-            //{
-            //    if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
-            //    {
-            //        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
-            //        Console.WriteLine("Locations NorthWest: [{0}]", tempFile.ToString() + tempRank.ToString());
-            //        tempRank--;
-            //    }
-            //}
-            //tempRank = oldRank;
-            //for (int tempFile = oldFile; tempFile < MAX_DIRECTION; tempFile--)
-            //{
-            //    if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
-            //    {
-            //        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
-            //        Console.WriteLine("Locations SouthEast: [{0}]", tempFile.ToString() + tempRank.ToString());
-            //        tempRank++;
-            //    }
-            //}
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private void TopLeftBishop(int oldFile, int oldRank, int newFile, int newRank)
+        {
+            int tempRank = oldRank;
+            bool clearMoves = false;
+            for (int tempFile = oldFile; tempFile < MAX_UP_DIRECTION; tempFile++)
+            {
+                if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
+                {
+                    if (tempFile != oldFile && tempRank != oldRank && tempFile < newFile && tempRank > newRank)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    tempRank--;
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private void BottomLeftBishop(int oldFile, int oldRank, int newFile, int newRank)
+        {
+            int tempRank = oldRank;
+            bool clearMoves = false;
+            for (int tempFile = oldFile; tempFile >= MAX_DOWN_DIRECTION; tempFile--)
+            {
+                if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
+                {
+                    if (tempFile != oldFile && tempRank != oldRank && tempFile > newFile && tempRank > newRank)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    tempRank--;
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private void BottomRightBishop(int oldFile, int oldRank, int newFile, int newRank)
+        {
+            int tempRank = oldRank;
+            bool clearMoves = false;
+            for (int tempFile = oldFile; tempFile >= MAX_DOWN_DIRECTION; tempFile--)
+            {
+                if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
+                {
+                    if (tempFile != oldFile && tempRank != oldRank && tempFile > newFile && tempRank < newRank)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    tempRank++;
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private ArrayList Knight(int oldFile, int oldRank, int newFile, int newRank)
+        {
+            int tempFile = oldFile;
+            int tempRank = oldRank;
+
+            if (newFile > oldFile && newRank > oldRank)
+            {
+                tempFile += 1; tempRank += 2;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                tempFile += 1; tempRank -= 1;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+            }
+            else if (newFile < oldFile && newRank > oldRank)
+            {
+                tempFile -= 1; tempRank += 2;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                tempFile -= 1; tempRank -= 1;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+            }
+            else if (newFile < oldFile && newRank < oldRank)
+            {
+                tempFile -= 1; tempRank -= 2;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                tempFile -= 1; tempRank += 1;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+            }
+            else if (newFile > oldFile && newRank < oldRank)
+            {
+                tempFile += 1; tempRank -= 2;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                tempFile += 1; tempRank += 1;
+                pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+            }
             return pieceLocations;
         }
-        private bool TopRightBishop(int file, int rank)
+        private ArrayList Rook(int oldFile, int oldRank, int newFile, int newRank)
         {
-            bool validMove = false;
-
-
-
-            return validMove;
-
-        }
-        private ArrayList Knight(int file, int rank)
-        {
-            //------------Adding location------------
-            //if (tempFile>= 0 && j >= 0 && tempFile<= 7 && j <= 7)
-            //{
-            //    pieceLocations.Add(i.ToString() + j.ToString());
-            //}
+            if (newFile > oldFile && newRank == oldRank)
+            {
+                UpRook(oldFile, oldRank, newFile, newRank);
+            }
+            if (newFile < oldFile && newRank == oldRank)
+            {
+                DownRook(oldFile, oldRank, newFile, newRank);
+            }
+            if (newFile == oldFile && newRank < oldRank)
+            {
+                LeftRook(oldFile, oldRank, newFile, newRank);
+            }
+            if (newFile == oldFile && newRank > oldRank)
+            {
+                RightRook(oldFile, oldRank, newFile, newRank);
+            }
             return pieceLocations;
         }
-        private ArrayList Rook(int file, int rank)
+        private void UpRook(int oldFile, int oldRank, int newFile, int newRank)
         {
-            return pieceLocations;
+            int tempRank = oldRank;
+            bool clearMoves = false;
+            for (int tempFile = oldFile; tempFile < MAX_UP_DIRECTION; tempFile++)
+            {
+                if (tempFile >= 0 && tempFile <= 7)
+                {
+                    if (tempFile != oldFile && tempFile < newFile)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
         }
-        private ArrayList Pawn(int file, int rank)
+        private void DownRook(int oldFile, int oldRank, int newFile, int newRank)
         {
+            int tempRank = oldRank;
+            bool clearMoves = false;
+            for (int tempFile = oldFile; tempFile >= MAX_DOWN_DIRECTION; tempFile--)
+            {
+                if (tempFile >= 0 && tempFile <= 7)
+                {
+                    if (tempFile != oldFile && tempFile > newFile)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private void LeftRook(int oldFile, int oldRank, int newFile, int newRank)
+        {
+            int tempFile = oldFile;
+            bool clearMoves = false;
+            for (int tempRank = oldRank; tempRank >= MAX_DOWN_DIRECTION; tempRank--)
+            {
+                if (tempRank >= 0 && tempRank <= 7)
+                {
+                    if (tempRank != oldRank && tempRank > newRank)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempRank != newRank)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private void RightRook(int oldFile, int oldRank, int newFile, int newRank)
+        {
+            int tempFile = oldFile;
+            bool clearMoves = false;
+            for (int tempRank = oldRank; tempRank < MAX_UP_DIRECTION; tempRank++)
+            {
+                if (tempRank >= 0 && tempRank <= 7)
+                {
+                    if (tempRank != oldRank && tempRank < newRank)
+                    {
+                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempRank != newRank)
+                        {
+                            clearMoves = true;
+                        }
+                    }
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                }
+            }
+            if (clearMoves)
+            {
+                pieceLocations.Clear();
+            }
+        }
+        private ArrayList Pawn(string action, int file, int rank)
+        {
+            bool isAttack = false;
+            bool canMoveTwo = false;
+            int tempFile = file;
+            int tempRank = rank;
+
+            if (action == "x") { isAttack = true; } else if (action == "-") { isAttack = false; }
+
+            if (file == 1 && chessBoard[ file, rank] == "PL")
+            {
+                canMoveTwo = true;
+            }
+            else if (file == 6 && chessBoard[file, rank] == "pd")
+            {
+                canMoveTwo = true;
+            }
+
+            if (chessBoard[file, rank] == "PL")
+            {
+                if (isAttack)
+                {
+                    tempFile += 1; tempRank += 1;
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    tempFile -= 2;
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                }
+                else
+                {
+                    tempFile += 1;
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    if (canMoveTwo)
+                    {
+                        tempFile += 1;
+                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    }
+                }
+            }
+            else if (chessBoard[file, rank] == "pd")
+            {
+                if (isAttack)
+                {
+                    tempFile -= 1; tempRank -= 1;
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    tempFile += 2;
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                }
+                else
+                {
+                    tempRank -= 1;
+                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    if (canMoveTwo)
+                    {
+                        tempRank -= 1;
+                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    }
+                }
+            }
+
             return pieceLocations;
         }
     }

@@ -11,11 +11,6 @@ namespace ChessFileIO.Models
 {
     public class GameLogic : BoardLayout
     {
-        //
-        //-------------
-        //Return ArrayList of Locations to check for validation.
-        //-------------
-        //
         PieceLogic pieceLogic = new PieceLogic();
         public bool MovePiece(string piece, string action, int parsedOldFile, int parsedOldRank, int parsedNewFile, int parsedNewRank)
         {
@@ -26,8 +21,8 @@ namespace ChessFileIO.Models
             string newLocation = tempFile.ToString() + tempRank.ToString();
             string movingPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1];
             string emptyPiece = chessBoard[parsedNewFile - 1, parsedNewRank - 1];
-            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, parsedOldFile - 1, parsedOldRank - 1, parsedNewFile - 1, parsedNewRank - 1);
-
+            ArrayList possibleLocations = pieceLogic.AppropriatePiece(piece, action, parsedOldFile - 1, parsedOldRank - 1, parsedNewFile - 1, parsedNewRank - 1);
+            
             if (!IsEmpty(parsedOldFile, parsedOldRank))
             {
                 if (IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
@@ -49,9 +44,19 @@ namespace ChessFileIO.Models
                         if (char.IsUpper(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsLower(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()) 
                             || char.IsLower(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsUpper(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()))
                         {
-                            validMove = true;
-                            chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
-                            chessBoard[parsedOldFile - 1, parsedOldRank - 1] = BoardPiece(ChessTypes.Empty);
+                            if (allMoves.ToString()[allMoves.Count].ToString().First() != chessBoard[parsedOldFile - 1, parsedOldRank - 1].ToString().First())
+                            {
+                                validMove = true;
+                                chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                                chessBoard[parsedOldFile - 1, parsedOldRank - 1] = BoardPiece(ChessTypes.Empty);
+                                allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
+                            }
+                            else
+                            {
+                                string incMove = String.Format("[{0,-7}]    Invalid piece to move.", "Error");
+                                Console.WriteLine(incMove);
+                                validMove = false;
+                            }
                         }
                     }
                     else
@@ -65,9 +70,21 @@ namespace ChessFileIO.Models
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        validMove = true;
-                        chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
-                        chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
+                        allMoves.Add(" ");
+                        if ((string)allMoves[allMoves.Count] == " ")
+                        {
+                            Console.WriteLine(allMoves[allMoves.Count].ToString().First() + "    " + chessBoard[parsedOldFile - 1, parsedOldRank - 1].ToString().First());
+                            validMove = true;
+                            chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
+                            chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
+                            allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
+                        }
+                        else
+                        {
+                            string incMove = String.Format("[{0,-7}]    Invalid piece to move.", "Error");
+                            Console.WriteLine(incMove);
+                            validMove = false;
+                        }
                     }
                     else
                     {

@@ -353,6 +353,7 @@ namespace ChessFileIO.Models
                 canMoveTwo = true;
             }
 
+
             if (chessBoard[file, rank] == "PL")
             {
                 if (isAttack)
@@ -384,11 +385,11 @@ namespace ChessFileIO.Models
                 }
                 else
                 {
-                    tempRank -= 1;
+                    tempFile -= 1;
                     pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     if (canMoveTwo)
                     {
-                        tempRank -= 1;
+                        tempFile -= 1;
                         pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     }
                 }

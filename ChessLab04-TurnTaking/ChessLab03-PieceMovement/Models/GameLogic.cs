@@ -12,6 +12,8 @@ namespace ChessFileIO.Models
     public class GameLogic : BoardLayout
     {
         PieceLogic pieceLogic = new PieceLogic();
+        static char previousPiece = ' ';
+        static char currentPiece = ' ';
         public bool MovePiece(string piece, string action, int parsedOldFile, int parsedOldRank, int parsedNewFile, int parsedNewRank)
         {
             bool validMove = false;
@@ -37,15 +39,18 @@ namespace ChessFileIO.Models
                     Console.WriteLine(incMove);
                     validMove = false;
                 }
+                if (allMoves.Count == 0)
+                {
+                    allMoves.Add(" ");
+                }
+                currentPiece = chessBoard[parsedOldFile - 1, parsedOldRank - 1].First();
                 if (!IsEmpty(parsedNewFile, parsedNewRank) && isAttack)
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        allMoves.Add(" ");
                         if ((string)allMoves[allMoves.Count - 1] == " ")
                         {
-                            if (char.IsUpper(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsLower(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First())
-                            || char.IsLower(chessBoard[parsedOldFile - 1, parsedOldRank - 1].First()) && char.IsUpper(chessBoard[parsedNewFile - 1, parsedNewRank - 1].First()))
+                            if (char.IsUpper(previousPiece) && char.IsLower(currentPiece) || char.IsLower(previousPiece) && char.IsUpper(currentPiece) || previousPiece == ' ')
                             {
                                 if (allMoves.ToString()[allMoves.Count - 1].ToString().First() != chessBoard[parsedOldFile - 1, parsedOldRank - 1].ToString().First())
                                 {
@@ -74,13 +79,13 @@ namespace ChessFileIO.Models
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        allMoves.Add(" ");
-                        if ((string)allMoves[allMoves.Count - 1] == " ")
+                        if (char.IsUpper(previousPiece) && char.IsLower(currentPiece) || char.IsLower(previousPiece) && char.IsUpper(currentPiece) || previousPiece == ' ')
                         {
                             validMove = true;
                             chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
                             chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
                             allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
+                            previousPiece = currentPiece;
                         }
                         else
                         {

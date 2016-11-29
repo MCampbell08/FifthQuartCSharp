@@ -48,13 +48,24 @@ namespace ChessFileIO.Models
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        if (char.IsUpper(previousPiece) && char.IsLower(currentPiece) || char.IsLower(previousPiece) && char.IsUpper(currentPiece))
+                        if (char.IsUpper(previousPiece) && char.IsLower(currentPiece) && !whiteInCheck || char.IsLower(previousPiece) && char.IsUpper(currentPiece) && !blackInCheck)
                         {
-                            validMove = true;
                             chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
                             chessBoard[parsedOldFile - 1, parsedOldRank - 1] = BoardPiece(ChessTypes.Empty);
-                            allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
-                            previousPiece = currentPiece;
+                            CheckKing(previousPiece, true);
+
+                            if (!KingInCheck(previousPiece))
+                            {
+                                allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
+                                previousPiece = currentPiece;
+                                CheckKing(currentPiece, false);
+                                validMove = true;
+                            }
+                            else
+                            {
+                                chessBoard[parsedNewFile - 1, parsedNewRank - 1] = emptyPiece;
+                                chessBoard[parsedOldFile - 1, parsedOldRank - 1] = movingPiece;
+                            }
                         }
                         else
                         {
@@ -74,14 +85,29 @@ namespace ChessFileIO.Models
                 {
                     if (possibleLocations.Contains(newLocation))
                     {
-                        if (char.IsUpper(previousPiece) && char.IsLower(currentPiece) || char.IsLower(previousPiece) && char.IsUpper(currentPiece) || previousPiece == ' ')
+                        if (char.IsUpper(previousPiece) && char.IsLower(currentPiece) && !whiteInCheck || char.IsLower(previousPiece) && char.IsUpper(currentPiece) && !blackInCheck || previousPiece == ' ')
                         {
-                            validMove = true;
                             chessBoard[parsedNewFile - 1, parsedNewRank - 1] = movingPiece;
                             chessBoard[parsedOldFile - 1, parsedOldRank - 1] = emptyPiece;
-                            allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
-                            previousPiece = currentPiece;
-                            CheckKing(currentPiece);
+
+                            if (previousPiece != ' ')
+                            {
+                                CheckKing(previousPiece, true);
+                            }
+
+                            if (!KingInCheck(previousPiece))
+                            {
+                                allMoves.Add(chessBoard[parsedNewFile - 1, parsedNewRank - 1]);
+                                previousPiece = currentPiece;
+                                CheckKing(currentPiece, false);
+                                validMove = true;
+                            }
+                            else
+                            {
+                                chessBoard[parsedNewFile - 1, parsedNewRank - 1] = emptyPiece;
+                                chessBoard[parsedOldFile - 1, parsedOldRank - 1] = movingPiece;
+                                validMove = false;
+                            }
                         }
                         else
                         {
@@ -122,7 +148,7 @@ namespace ChessFileIO.Models
             if (chessBoard[file - 1, rank - 1] == BoardPiece(ChessTypes.Empty)) { return true; }
             else { return false; }
         }
-        private void CheckKing(char piece)
+        private void CheckKing(char piece, bool checkNextMove)
         {
             string boardPiece = " ";
             int kingFile = 0;
@@ -147,12 +173,20 @@ namespace ChessFileIO.Models
                         if (boardPiece == "kd")
                         {
                             kingFile = i;
-                            kingRank = j; 
+                            kingRank = j;
                         }
                     }
                 }
             }
-            pieceLogic.CheckKingLogic(checkWhiteK, kingFile, kingRank);
+            pieceLogic.CheckKingLogic(checkWhiteK, checkNextMove, kingFile, kingRank);
+        }
+        private bool KingInCheck(char piece)
+        {
+            if (char.IsUpper(piece) && blackInCheck || char.IsLower(piece) && whiteInCheck)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace ChessFileIO.Models
             }
             else if (piece == ChessTypes.Bishop.ToString().Substring(0, 1))
             {
-                locations = Bishop(oldFile, oldRank, newFile, newRank);
+                locations = Bishop(oldFile, oldRank, newFile, newRank, false);
             }
             else if (piece == "")
             {
@@ -69,46 +69,88 @@ namespace ChessFileIO.Models
         }
         private ArrayList Queen(int oldFile, int oldRank, int newFile, int newRank)
         {
-            pieceLocations = Rook(oldFile, oldRank, newFile, newRank, false);
-            pieceLocations = Bishop(oldFile, oldRank, newFile, newRank);
+            if (oldFile == newFile && oldRank == newRank)
+            {
+                pieceLocations = Rook(oldFile, oldRank, newFile, newRank, true);
+                pieceLocations = Bishop(oldFile, oldRank, newFile, newRank, true);
+            }
+            else
+            {
+                pieceLocations = Rook(oldFile, oldRank, newFile, newRank, false);
+                pieceLocations = Bishop(oldFile, oldRank, newFile, newRank, false);
+            }
             return pieceLocations;
         }
-        private ArrayList Bishop(int oldFile, int oldRank, int newFile, int newRank)
+        private ArrayList Bishop(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
             if (newFile > oldFile && newRank > oldRank)
             {
-                TopRightBishop(oldFile, oldRank, newFile, newRank);
+                TopRightBishop(oldFile, oldRank, newFile, newRank, isCheck);
             }
             else if (newFile > oldFile && newRank < oldRank)
             {
-                TopLeftBishop(oldFile, oldRank, newFile, newRank);
+                TopLeftBishop(oldFile, oldRank, newFile, newRank, isCheck);
             }
             else if (newFile < oldFile && newRank < oldRank)
             {
-                BottomLeftBishop(oldFile, oldRank, newFile, newRank);
+                BottomLeftBishop(oldFile, oldRank, newFile, newRank, isCheck);
             }
             else if (newFile < oldFile && newRank > oldRank)
             {
-                BottomRightBishop(oldFile, oldRank, newFile, newRank);
+                BottomRightBishop(oldFile, oldRank, newFile, newRank, isCheck);
+            }
+            else if (newFile == oldFile && newRank == oldRank)
+            {
+                TopRightBishop(oldFile, oldRank, newFile, newRank, isCheck);
+                TopLeftBishop(oldFile, oldRank, newFile, newRank, isCheck);
+                BottomLeftBishop(oldFile, oldRank, newFile, newRank, isCheck);
+                BottomRightBishop(oldFile, oldRank, newFile, newRank, isCheck);
+                return kingCompetitors;
             }
             return pieceLocations;
         }
-        private void TopRightBishop(int oldFile, int oldRank, int newFile, int newRank)
+        private void TopRightBishop(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
             int tempRank = oldRank;
+            int previousFile = oldFile;
+            int previousRank = oldRank;
             bool clearMoves = false;
             for (int tempFile = oldFile; tempFile < MAX_UP_DIRECTION; tempFile++)
             {
                 if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
                 {
-                    if (tempFile != oldFile && tempRank != oldRank && tempFile < newFile && tempRank < newRank)
+                    if (!isCheck)
                     {
-                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        if (tempFile != oldFile && tempRank != oldRank && tempFile < newFile && tempRank < newRank)
                         {
-                            clearMoves = true;
+                            if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                            {
+                                clearMoves = true;
+                            }
                         }
+                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     }
-                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    else
+                    {
+                        if (!kingCompetitors.Contains(tempFile.ToString() + tempRank.ToString()) && previousFile != newFile && previousRank != newRank)
+                        {
+                            if (chessBoard[previousFile, previousRank] == BoardPiece(ChessTypes.Empty))
+                            {
+                                kingCompetitors.Add(tempFile.ToString() + tempRank.ToString());
+                            }
+                            else
+                            {
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[previousFile, previousRank] == "BL" || chessBoard[previousFile, previousRank] == "QL")
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[previousFile, previousRank] == "bd" || chessBoard[previousFile, previousRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(previousFile.ToString() + previousRank.ToString());
+                                }
+                                tempFile = MAX_DOWN_DIRECTION;
+                            }
+                        }
+                        previousFile = tempFile;
+                        previousRank = tempRank;
+                    }
                     tempRank++;
                 }
             }
@@ -117,22 +159,48 @@ namespace ChessFileIO.Models
                 pieceLocations.Clear();
             }
         }
-        private void TopLeftBishop(int oldFile, int oldRank, int newFile, int newRank)
+        private void TopLeftBishop(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
             int tempRank = oldRank;
+            int previousFile = oldFile;
+            int previousRank = oldRank;
             bool clearMoves = false;
             for (int tempFile = oldFile; tempFile < MAX_UP_DIRECTION; tempFile++)
             {
                 if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
                 {
-                    if (tempFile != oldFile && tempRank != oldRank && tempFile < newFile && tempRank > newRank)
+                    if (!isCheck)
                     {
-                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        if (tempFile != oldFile && tempRank != oldRank && tempFile < newFile && tempRank > newRank)
                         {
-                            clearMoves = true;
+                            if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                            {
+                                clearMoves = true;
+                            }
                         }
+                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     }
-                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    else
+                    {
+                        if (!kingCompetitors.Contains(tempFile.ToString() + tempRank.ToString()) && previousFile != newFile && previousRank != newRank)
+                        {
+                            if (chessBoard[previousFile, previousRank] == BoardPiece(ChessTypes.Empty))
+                            {
+                                kingCompetitors.Add(tempFile.ToString() + tempRank.ToString());
+                            }
+                            else
+                            {
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[previousFile, previousRank] == "BL" || chessBoard[previousFile, previousRank] == "QL")
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[previousFile, previousRank] == "bd" || chessBoard[previousFile, previousRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(previousFile.ToString() + previousRank.ToString());
+                                }
+                                tempFile = MAX_DOWN_DIRECTION;
+                            }
+                        }
+                        previousFile = tempFile;
+                        previousRank = tempRank;
+                    }
                     tempRank--;
                 }
             }
@@ -141,22 +209,48 @@ namespace ChessFileIO.Models
                 pieceLocations.Clear();
             }
         }
-        private void BottomLeftBishop(int oldFile, int oldRank, int newFile, int newRank)
+        private void BottomLeftBishop(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
             int tempRank = oldRank;
+            int previousFile = oldFile;
+            int previousRank = oldRank;
             bool clearMoves = false;
             for (int tempFile = oldFile; tempFile >= MAX_DOWN_DIRECTION; tempFile--)
             {
                 if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
                 {
-                    if (tempFile != oldFile && tempRank != oldRank && tempFile > newFile && tempRank > newRank)
+                    if (!isCheck)
                     {
-                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        if (tempFile != oldFile && tempRank != oldRank && tempFile > newFile && tempRank > newRank)
                         {
-                            clearMoves = true;
+                            if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                            {
+                                clearMoves = true;
+                            }
                         }
+                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     }
-                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    else
+                    {
+                        if (!kingCompetitors.Contains(tempFile.ToString() + tempRank.ToString()) && previousFile != newFile && previousRank != newRank)
+                        {
+                            if (chessBoard[previousFile, previousRank] == BoardPiece(ChessTypes.Empty))
+                            {
+                                kingCompetitors.Add(tempFile.ToString() + tempRank.ToString());
+                            }
+                            else
+                            {
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[previousFile, previousRank] == "BL" || chessBoard[previousFile, previousRank] == "QL")
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[previousFile, previousRank] == "bd" || chessBoard[previousFile, previousRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(previousFile.ToString() + previousRank.ToString());
+                                }
+                                tempFile = MAX_DOWN_DIRECTION;
+                            }
+                        }
+                        previousFile = tempFile;
+                        previousRank = tempRank;
+                    }
                     tempRank--;
                 }
             }
@@ -165,22 +259,48 @@ namespace ChessFileIO.Models
                 pieceLocations.Clear();
             }
         }
-        private void BottomRightBishop(int oldFile, int oldRank, int newFile, int newRank)
+        private void BottomRightBishop(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
             int tempRank = oldRank;
+            int previousFile = oldFile;
+            int previousRank = oldRank;
             bool clearMoves = false;
             for (int tempFile = oldFile; tempFile >= MAX_DOWN_DIRECTION; tempFile--)
             {
                 if (tempFile >= 0 && tempRank >= 0 && tempFile <= 7 && tempRank <= 7)
                 {
-                    if (tempFile != oldFile && tempRank != oldRank && tempFile > newFile && tempRank < newRank)
+                    if (!isCheck)
                     {
-                        if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                        if (tempFile != oldFile && tempRank != oldRank && tempFile > newFile && tempRank < newRank)
                         {
-                            clearMoves = true;
+                            if (chessBoard[tempFile, tempRank] != BoardPiece(ChessTypes.Empty) && tempFile != newFile && tempRank != newRank)
+                            {
+                                clearMoves = true;
+                            }
                         }
+                        pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
                     }
-                    pieceLocations.Add(tempFile.ToString() + tempRank.ToString());
+                    else
+                    {
+                        if (!kingCompetitors.Contains(tempFile.ToString() + tempRank.ToString()) && previousFile != newFile && previousRank != newRank)
+                        {
+                            if (chessBoard[previousFile, previousRank] == BoardPiece(ChessTypes.Empty))
+                            {
+                                kingCompetitors.Add(tempFile.ToString() + tempRank.ToString());
+                            }
+                            else
+                            {
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[previousFile, previousRank] == "BL" || chessBoard[previousFile, previousRank] == "QL")
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[previousFile, previousRank] == "bd" || chessBoard[previousFile, previousRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(previousFile.ToString() + previousRank.ToString());
+                                }
+                                tempFile = MAX_DOWN_DIRECTION;
+                            }
+                        }
+                        previousFile = tempFile;
+                        previousRank = tempRank;
+                    }
                     tempRank++;
                 }
             }
@@ -296,7 +416,7 @@ namespace ChessFileIO.Models
         }
         private void UpRook(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
-            int previousFile = 0;
+            int previousFile = oldFile;
             bool clearMoves = false;
 
             for (int tempFile = oldFile; tempFile < MAX_UP_DIRECTION; tempFile++)
@@ -324,6 +444,11 @@ namespace ChessFileIO.Models
                             }
                             else
                             {
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[previousFile, oldRank] == "RL" || chessBoard[previousFile, oldRank] == "QL") 
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[previousFile, oldRank] == "rd" || chessBoard[previousFile, oldRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(previousFile.ToString() + oldRank.ToString());
+                                }
                                 tempFile = MAX_UP_DIRECTION;
                             }
                         }
@@ -366,9 +491,10 @@ namespace ChessFileIO.Models
                             }
                             else
                             {
-                                if (chessBoard[newFile, newRank] == "kd" && chessBoard[previousFile, oldRank] == "RL" || chessBoard[newFile, newRank] == "KL" && chessBoard[previousFile, oldRank] == "rd")
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[previousFile, oldRank] == "RL" || chessBoard[previousFile, oldRank] == "QL")  
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[previousFile, oldRank] == "rd" || chessBoard[previousFile, oldRank] == "qd"))
                                 {
-                                    kingCompetitors.Add(tempFile.ToString() + oldRank.ToString());
+                                    kingCompetitors.Add(previousFile.ToString() + oldRank.ToString());
                                 }
                                 tempFile = MAX_DOWN_DIRECTION;
                             }
@@ -412,6 +538,11 @@ namespace ChessFileIO.Models
                             }
                             else
                             {
+                                if (chessBoard[newFile, newRank] == "kd" && (chessBoard[oldFile, previousRank] == "RL" || chessBoard[oldFile, previousRank] == "QL")
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[oldFile, previousRank] == "rd" || chessBoard[oldFile, previousRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(oldFile.ToString() + previousRank.ToString());
+                                }
                                 tempRank = MAX_DOWN_DIRECTION;
                             }
                         }
@@ -426,7 +557,7 @@ namespace ChessFileIO.Models
         }
         private void RightRook(int oldFile, int oldRank, int newFile, int newRank, bool isCheck)
         {
-            int previousRank = 0;
+            int previousRank = oldRank;
             bool clearMoves = false;
 
             for (int tempRank = oldRank; tempRank < MAX_UP_DIRECTION; tempRank++)
@@ -454,6 +585,11 @@ namespace ChessFileIO.Models
                             }
                             else
                             {
+                                if (chessBoard[newFile, newRank] == "kd"    && (chessBoard[oldFile, previousRank] == "RL" || chessBoard[oldFile, previousRank] == "QL")
+                                    || chessBoard[newFile, newRank] == "KL" && (chessBoard[oldFile, previousRank] == "rd" || chessBoard[oldFile, previousRank] == "qd"))
+                                {
+                                    kingCompetitors.Add(oldFile.ToString() + previousRank.ToString());
+                                }
                                 tempRank = MAX_UP_DIRECTION;
                             }
                         }
@@ -543,7 +679,7 @@ namespace ChessFileIO.Models
             }
             return pieceLocations;
         }
-        public void CheckKingLogic(bool isWhite, int file, int rank)
+        public void CheckKingLogic(bool isWhite, bool checkNextMove, int file, int rank)
         {
             int enemyPieceFile = 0;
             int enemyPieceRank = 0;
@@ -552,6 +688,7 @@ namespace ChessFileIO.Models
 
             if (isWhite)
             {
+                whiteInCheck = false;
                 while (!doneCheck && pieceSwitcher != ChessTypes.Empty)
                 {
                     AddCheckLogic(pieceSwitcher, file, rank);
@@ -572,7 +709,16 @@ namespace ChessFileIO.Models
                         {
                             if (CheckIndividualPiece(pieceSwitcher, isWhite, enemyPieceFile, enemyPieceRank))
                             {
-                                Console.WriteLine("White is in check!");
+                                if (!checkNextMove)
+                                {
+                                    Console.WriteLine("White is in check!");
+                                    whiteInCheck = true;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Cannot move there, king would be in check!");
+                                }
+                                break;
                             }
                         }
                     }
@@ -581,7 +727,8 @@ namespace ChessFileIO.Models
             }
             else
             {
-                while (!doneCheck && pieceSwitcher != ChessTypes.Empty)
+                blackInCheck = false;
+                while (!doneCheck && pieceSwitcher != ChessTypes.Empty && !blackInCheck)
                 {
                     AddCheckLogic(pieceSwitcher, file, rank);
                     foreach (string s in kingCompetitors)
@@ -590,6 +737,7 @@ namespace ChessFileIO.Models
                         {
                             enemyPieceFile = int.Parse(s.Substring(0, 2));
                             enemyPieceRank = int.Parse(s.Substring(2, 1));
+
                         }
                         else
                         {
@@ -600,7 +748,17 @@ namespace ChessFileIO.Models
                         {
                             if (CheckIndividualPiece(pieceSwitcher, isWhite, enemyPieceFile, enemyPieceRank))
                             {
-                                Console.WriteLine("Black is in check!");
+                                if (!checkNextMove)
+                                {
+                                    Console.WriteLine("Black is in check!");
+                                    blackInCheck = true;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Cannot move there, king would be in check!");
+                                    blackInCheck = true;
+                                }
+                                break;
                             }
                         }
                     }
@@ -621,7 +779,7 @@ namespace ChessFileIO.Models
             }
             else if (pieceType == ChessTypes.Bishop)
             {
-
+                kingCompetitors = Bishop(file, rank, file, rank, true);
             }
             else if (pieceType == ChessTypes.Knight)
             {
@@ -629,7 +787,7 @@ namespace ChessFileIO.Models
             }
             else if (pieceType == ChessTypes.Queen)
             {
-
+                kingCompetitors = Queen(file, rank, file, rank);
             }
         }
         private bool CheckIndividualPiece(ChessTypes pieceType, bool isWhite, int file, int rank)

@@ -12,8 +12,8 @@ namespace ChessFileIO.Utilities
     public class BoardLayout
     {
         protected static string[,] chessBoard = new string[8, 8];
-        protected bool whiteInCheck = false;
-        protected bool blackInCheck = false;
+        protected static bool whiteInCheck = false;
+        protected static bool blackInCheck = false;
         private BasicUtilities utilities = new BasicUtilities();
         private PlayerPiece playerPiece = new PlayerPiece();
         protected static ArrayList allMoves = new ArrayList();

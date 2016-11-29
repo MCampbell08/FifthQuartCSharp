@@ -3,3 +3,4 @@ C:\FifthQuartCSharp\ChessLab05-Check\ChessLab05-Check\bin\Debug\ChessFileIO.exe
 C:\FifthQuartCSharp\ChessLab05-Check\ChessLab05-Check\bin\Debug\ChessFileIO.pdb
 C:\FifthQuartCSharp\ChessLab05-Check\ChessLab05-Check\obj\Debug\ChessFileIO.exe
 C:\FifthQuartCSharp\ChessLab05-Check\ChessLab05-Check\obj\Debug\ChessFileIO.pdb
+C:\FifthQuartCSharp\ChessLab05-Check\ChessLab05-Check\obj\Debug\Chess.csprojResolveAssemblyReference.cache

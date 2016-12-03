@@ -30,5 +30,24 @@ namespace ChessFileIO.Utilities
             Match newInput = Regex.Match(input, @"[\S]+");
             return newInput.Value;
         }
+        public int[] StringLocParser(string input)
+        {
+            int[] location = new int[2];
+            if (input != null && input != "")
+            {
+                if (input.Substring(0, 1) == "-")
+                {
+                    location[0] = int.Parse(input.Substring(1, 1));
+                    location[1] = int.Parse(input.Substring(2, 1));
+                }
+                else
+                {
+                    location[0] = int.Parse(input.Substring(0, 1));
+                    location[1] = int.Parse(input.Substring(1, 1));
+                }
+            }
+
+            return location;
+        }
     }
 }

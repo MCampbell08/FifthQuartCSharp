@@ -1,14 +1,14 @@
 
             // First place the pieces onto the board
 
-    Rla1
-    Nlb1	//test
-    Blc1
-    Kld1
+    //Rla1
+    //Nlb1	//test
+    //Blc1
+    //Kld1
     Qle1
-    Blf1
-    Nlg1
-    Rlh1
+    //Blf1
+    //Nlg1
+    //Rlh1
     //Pla2
     //Plb2
     //Plc2
@@ -17,14 +17,14 @@
     //Plf2
     //Plg2
     //Plh2
-    Rda8
+    //Rda8
     Ndb8
-    Bdc8
-    Kdd8
-    Qde8
-    Bdf8
-    Ndg8
-    Rdh8
+    //Bdc8
+    Kda8
+    //Qde8
+    //Bdf8
+    Nda7
+    //Rdh8
     //Pda7
     //Pdb7
     //Pdc7

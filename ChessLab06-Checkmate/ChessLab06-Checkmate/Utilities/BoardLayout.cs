@@ -14,9 +14,10 @@ namespace ChessFileIO.Utilities
         protected static string[,] chessBoard = new string[8, 8];
         protected static bool whiteInCheck = false;
         protected static bool blackInCheck = false;
+        protected static ArrayList pieceAttckKing = new ArrayList();
+        protected string attackPiece = "";
         private BasicUtilities utilities = new BasicUtilities();
         private PlayerPiece playerPiece = new PlayerPiece();
-        protected static ArrayList allMoves = new ArrayList();
         private const int charNumConverter = 48;
 
         public void AddPlacement(string piece, string color, string rank, string file)

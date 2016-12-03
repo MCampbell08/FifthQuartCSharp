@@ -34,6 +34,11 @@ namespace ChessFileIO
             fileName.Close();
             while (line != "Exit")
             {
+                if (parse.firstMovement)
+                {
+                    Console.Write("White's Turn: ");
+                }
+                else { Console.Write("Black's Turn: "); }
                 line = Console.ReadLine();
                 Match comment = Regex.Match(line, @"(\s+)?(\/+).*");
 

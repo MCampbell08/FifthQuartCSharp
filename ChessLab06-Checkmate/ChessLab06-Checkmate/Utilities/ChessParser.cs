@@ -15,7 +15,7 @@ namespace ChessFileIO
         private PlayerPiece player = new PlayerPiece();
         private BoardLayout board = new BoardLayout();
         private bool initialize = true;
-        private bool firstMovement = true;
+        public  bool firstMovement = true;
         private bool validMove = false;
 
         #region Regex Matches
@@ -39,6 +39,7 @@ namespace ChessFileIO
                 board.BoardInit();
                 initialize = false;
             }
+
 
             if (placement.Success)
             {

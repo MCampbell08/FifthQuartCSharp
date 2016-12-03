@@ -57,7 +57,18 @@
     <None Include="App.config" />
     <None Include="Data\Lab05.chess" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Data\AnastasiasMate.txt" />
+    <Content Include="Data\BackRankMate.txt" />
+    <Content Include="Data\BackRankMate2.txt" />
+    <Content Include="Data\BKFianchettoMate.txt" />
+    <Content Include="Data\DiagonalMate.txt" />
+    <Content Include="Data\QueenBishopPinMate.txt" />
+    <Content Include="Data\QueenKingMate.txt" />
+    <Content Include="Data\SmotheredMate.txt" />
+    <Content Include="Data\TwoBishopMate.txt" />
+    <Content Include="Data\TwoPawnCheckmate.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
